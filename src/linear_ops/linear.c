@@ -52,6 +52,7 @@ void free_matrix(Matrix* m) {
         free(m->data[i]);
     }
     free(m->data);
+    free(m);
 }
 
 Matrix* linear_dot(Matrix* m1, Matrix* m2) {
@@ -87,6 +88,31 @@ Matrix* linear_add(Matrix* m1, Matrix* m2) {
     return res;
 }
 
+
+Matrix* linear_sub(Matrix* m1, Matrix* m2) {
+    if(m1->cols != m2->cols || m1->rows != m2->rows) return NULL;
+
+    Matrix* res = make_matrix(m1->rows, m1->cols);
+    int i, j;
+
+    for(i = 0; i < m1->rows; i++) {
+        for(j = 0; j < m1->cols; j++) {
+            res->data[i][j] = m1->data[i][j] - m2->data[i][j];
+        }
+    }
+
+    return res;
+}
+
+double linear_sum(Matrix* m) {
+    double sum = 0.0;
+    for (int i = 0; i < m->rows; ++i) {
+        for (int j = 0; j < m->cols; ++j) {
+            sum += m->data[i][j];
+        }
+    }
+    return sum;
+}
 
 Matrix* linear_div(Matrix* m1, Matrix* m2) {
     if(m1->cols != m2->cols || m1->rows != m2->rows) return NULL;
@@ -131,4 +157,72 @@ Matrix* linear_exp(Matrix* m) {
     }
 
     return res;
+}
+
+Matrix* linear_sigmoid(Matrix* m) {
+    if(m == NULL) return NULL;
+
+    Matrix* res = make_matrix(m->rows, m->cols);
+
+    int i, j;
+    for(i = 0; i < m->rows; i++) {
+        for(j = 0; j < m->cols; j++) {
+            res->data[i][j] = 1 / (1 + exp(-res->data[i][j]));
+        }
+    }
+
+    return res;
+}
+
+Matrix* linear_sigmoid_deriv(Matrix* m) {
+    if(m == NULL) return NULL;
+
+    Matrix* res = make_matrix(m->rows, m->cols);
+
+    int i, j;
+    for(i = 0; i < m->rows; i++) {
+        for(j = 0; j < m->cols; j++) {
+            res->data[i][j] = res->data[i][j] * (1 - res->data[i][j]);
+        }
+    }
+
+    return res;
+}
+
+Matrix* linear_mul_elementwise(Matrix* m1, Matrix* m2) {
+    // Check if matrix dimensions are compatible
+    if (m1->rows != m2->rows || m1->cols != m2->cols) {
+        fprintf(stderr, "Error: Matrix dimensions are not compatible for element-wise multiplication\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Matrix* result = make_matrix(m1->rows, m1->cols);
+
+    for (int i = 0; i < m1->rows; ++i) {
+        for (int j = 0; j < m1->cols; ++j) {
+            result->data[i][j] = m1->data[i][j] * m2->data[i][j];
+        }
+    }
+
+    return result;
+}
+
+Matrix* linear_transpose(Matrix* m) {
+    Matrix* result = make_matrix(m->cols, m->rows);
+
+    for (int i = 0; i < m->rows; ++i) {
+        for (int j = 0; j < m->cols; ++j) {
+            result->data[j][i] = m->data[i][j];
+        }
+    }
+
+    return result;
+}
+
+void linear_scale(Matrix* m, double scalar) {
+    for (int i = 0; i < m->rows; ++i) {
+        for (int j = 0; j < m->cols; ++j) {
+            m->data[i][j] *= scalar;
+        }
+    }
 }

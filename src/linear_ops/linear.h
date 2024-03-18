@@ -7,21 +7,19 @@ typedef struct Matrix {
 } Matrix;
 
 Matrix* make_matrix(int n_rows, int n_cols);
-
 void free_matrix(Matrix* m);
-
 Matrix* copy_matrix(double* data, int n_rows, int n_cols);
-
 void print_matrix(Matrix* m);
-
 Matrix* linear_dot(Matrix* m1, Matrix* m2);
-
 Matrix* linear_add(Matrix*, Matrix*);
-
+double linear_sum(Matrix*);
+Matrix* linear_sub(Matrix*, Matrix*);
 Matrix* initialise_random(int n_rows, int n_cols);
-
 Matrix* linear_div(Matrix* m1, Matrix* m2);
-
 Matrix* linear_sqrt(Matrix* m);
-
 Matrix* linear_exp(Matrix* m);
+Matrix* linear_sigmoid(Matrix* m);
+Matrix* linear_sigmoid_deriv(Matrix* m);
+Matrix* linear_mul_elementwise(Matrix* m1, Matrix* m2);
+Matrix* linear_transpose(Matrix* m);
+void linear_scale(Matrix* m, double scalar);

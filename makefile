@@ -6,6 +6,13 @@ CFLAGS+=-lgsl
 CFLAGS+=-lgslcblas
 
 
+main:
+	$(CC) -c src/neural.c -o bin/neural.o
+	$(CC) -c src/linear_ops/linear.c -o bin/linear.o
+	$(CC) -c main.c -o bin/main.o
+	$(CC) bin/*.o -o bin/main
+	rm bin/*.o
+
 neural: 
 	$(CC) $(CFLAGS) -c src/*
 	$(CC) $(CFLAGS) src/* 
